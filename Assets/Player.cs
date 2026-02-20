@@ -46,15 +46,11 @@ public class Example : MonoBehaviour
                 playerVelocity.y = -2f;
         }
 
-        // Read input
-        //Vector2 input = moveAction.action.ReadValue<Vector2>();
-        //Vector3 move = new Vector3(input.x, 0, input.y);
-        //move = Vector3.ClampMagnitude(move, 1f);
-
         //rotation of playerbody
         pitch += Input.GetAxis("Mouse Y") * Ysens * -1;
         yaw += Input.GetAxis("Mouse X") * Xsens;
         transform.rotation = Quaternion.Euler(pitch,yaw,0);
+        //(might want to make this only rotate the camera/ part of player the whole player model rotates as is)
 
         float xrotation = transform.eulerAngles.y * Mathf.PI/180;
 
@@ -66,12 +62,9 @@ public class Example : MonoBehaviour
 
         // Apply gravity
         playerVelocity.y += gravityValue * Time.deltaTime;
-
-        // Move
-        //Vector3 finalMove = move * playerSpeed + Vector3.up * playerVelocity.y;
-        //controller.Move(finalMove * Time.deltaTime);
         
-        //Control handling
+        //Control handling -- uses legacy input system -- could be updated to new input
+        //when I programmed this only god and I knew how it worked, now only god knows
         Vector3 finalMove = new Vector3(0,playerVelocity.y,0);
         if (Input.GetKey(KeyCode.W)){
             finalMove = new Vector3(playerSpeed * Mathf.Sin(xrotation), playerVelocity.y, playerSpeed * Mathf.Cos(xrotation));
@@ -82,6 +75,7 @@ public class Example : MonoBehaviour
         }else if (Input.GetKey(KeyCode.D)){
             finalMove = new Vector3(playerSpeed * Mathf.Cos(xrotation), playerVelocity.y, -1 * playerSpeed * Mathf.Sin(xrotation));
         }
+        //submits adjusted final move command to movement controller
         controller.Move(finalMove * Time.deltaTime);
     }
 }
