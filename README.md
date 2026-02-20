@@ -1,6 +1,6 @@
-# Dream Game
+# Reflection Game
 
-TEAM SPLAT RISE UP
+YGT GAMING RISE UP
 
 ## Getting Started
 
