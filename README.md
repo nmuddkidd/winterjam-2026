@@ -48,7 +48,7 @@ Once you've made changes to the code:
 
 3. **Push to GitHub**
 ```bash
-   git push origin master
+   git push origin main
 ```
 
 ### Tips
