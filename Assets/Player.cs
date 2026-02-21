@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,6 +24,9 @@ public class Example : MonoBehaviour
     private float yaw;
     private float pitch;
 
+    private GameObject[] pickups;
+    public String[] reqitems = {"block1","block2","block3"};
+    private bool[] pickedup = new bool[3];
     private void OnEnable()
     {
         moveAction.action.Enable();
@@ -36,6 +40,12 @@ public class Example : MonoBehaviour
     }
 
     void Update()
+    {
+        movement();
+        clickinteraction();
+    }
+
+    void movement()
     {
         groundedPlayer = controller.isGrounded;
 
@@ -77,5 +87,42 @@ public class Example : MonoBehaviour
         }
         //submits adjusted final move command to movement controller
         controller.Move(finalMove * Time.deltaTime);
+    }
+
+    void clickinteraction()
+    {
+        if (Input.GetMouseButtonDown(0)&&allitems())
+        {
+            Debug.Log("all done!");
+        }
+        else if(Input.GetMouseButtonDown(0))
+        {
+            Debug.Log("not done yet :()");
+        }
+        pickups = GameObject.FindGameObjectsWithTag("pickup");
+        foreach (GameObject pickup in pickups)
+        {
+            //Debug.Log(Vector3.Distance(transform.position, pickup.transform.position)+" "+Vector3.Angle(pickup.transform.position - transform.position, transform.forward));
+            if(Input.GetMouseButtonDown(0)){
+                if(Vector3.Distance(transform.position, pickup.transform.position)<5
+                &&Vector3.Angle(pickup.transform.position - transform.position, transform.forward)<50)
+                {
+                    pickedup[Array.IndexOf(reqitems,pickup.name)] = true;
+                    Debug.Log(reqitems[Array.IndexOf(reqitems,pickup.name)]+" picked up");
+                    Destroy(pickup);
+                }
+            }
+        }
+    }
+
+    bool allitems()
+    {
+        foreach(bool b in pickedup)
+        {
+            if(!b){
+                return false;
+            }
+        }
+        return true;
     }
 }
