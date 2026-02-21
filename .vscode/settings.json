@@ -68,5 +68,5 @@
         "*.slnx": "*.csproj"
     },
     "winter_gamejam.slnx=======dotnet.defaultSolution": "winterjam-2026.slnx>>>>>>>7b2aa1bad3228a2ee586fef37517451413c86d11",
-    "dotnet.defaultSolution": "winter_gamejam.slnx"
+    "dotnet.defaultSolution": "winterjam-2026.slnx"
 }
