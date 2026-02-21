@@ -2,27 +2,48 @@ using UnityEngine;
 
 public class movereflect : MonoBehaviour
 {
-    public GameObject player;
-    public Rigidbody body; 
-    private CharacterController controller;
-    public float playerSpeed = 5.0f;
+    public char axis = 'z';
+    private Vector3 initialpos;
+    private Vector3 parentinitialpos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        controller = player.GetComponent<CharacterController>();
+        //saves the initial position of the model and the player
+        initialpos = transform.position;
+        parentinitialpos = transform.parent.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Vector3 newvelocity = controller.velocity;
-        //newvelocity.z *= -1;
-        //body.linearVelocity = newvelocity;
+        //chooses which reflection it is
+        switch (axis)
+        {
+            case 'z':
+                reflectZ();
+                break;
+            case 'x':
+                reflectX();
+                break;
+        }
+    }
 
-        //mirror over z=33
-        Vector3 newpos = player.transform.position;
-        newpos.z = 33+(33 - player.transform.position.z);
+    void reflectX()
+    {
+        //updates the position by adding the initial position and the parents change, inverting the reflection axis
+        Vector3 changeparent = transform.parent.position - parentinitialpos;
+        Vector3 newpos = initialpos + changeparent;
+        newpos.x -= 2*changeparent.x;
+        transform.position = newpos;
+    }
+
+    void reflectZ()
+    {
+        //updates the position by adding the initial position and the parents change, inverting the reflection axis
+        Vector3 changeparent = transform.parent.position - parentinitialpos;
+        Vector3 newpos = initialpos + changeparent;
+        newpos.z -= 2*changeparent.z;
         transform.position = newpos;
     }
 }
