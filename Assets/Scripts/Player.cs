@@ -13,19 +13,21 @@ public class Example : MonoBehaviour
     public float Xsens = 10f;
     public float Ysens = 10f;
 
-    public CharacterController controller;
-    private Vector3 playerVelocity;
-    private bool groundedPlayer;
-
     [Header("Input Actions")]
     public InputActionReference moveAction;
     public InputActionReference jumpAction;
+    public CharacterController controller;
+    private Animator[] animcontrollers = new Animator[2];
 
+    [Header("Input Actions")]
+
+    public String[] reqitems = {"block1","block2","block3"};
     private float yaw;
     private float pitch;
 
+    private Vector3 playerVelocity;
+    private bool groundedPlayer;
     private GameObject[] pickups;
-    public String[] reqitems = {"block1","block2","block3"};
     private bool[] pickedup = new bool[3];
     private void OnEnable()
     {
@@ -37,6 +39,14 @@ public class Example : MonoBehaviour
     {
         moveAction.action.Disable();
         jumpAction.action.Disable();
+    }
+
+    void Start()
+    {
+        //animcontroller = GameObject.FindGameObjectWithTag("playermodel").GetComponent<Animator>();
+        GameObject[] models = GameObject.FindGameObjectsWithTag("playermodel");
+        animcontrollers[0] = models[0].GetComponent<Animator>();
+        animcontrollers[1] = models[1].GetComponent<Animator>();
     }
 
     void Update()
@@ -87,17 +97,22 @@ public class Example : MonoBehaviour
         }
         //submits adjusted final move command to movement controller
         controller.Move(finalMove * Time.deltaTime);
+        //animcontroller.SetFloat("speed",Mathf.Sqrt(finalMove.x*finalMove.x+finalMove.z*finalMove.z));
+        
+        //Debug.Log(finalMove.magnitude);
+        animcontrollers[0].SetFloat("speed",Mathf.Sqrt(finalMove.x*finalMove.x+finalMove.z*finalMove.z));
+        animcontrollers[1].SetFloat("speed",Mathf.Sqrt(finalMove.x*finalMove.x+finalMove.z*finalMove.z));
     }
 
     void clickinteraction()
     {
         if (Input.GetMouseButtonDown(0)&&allitems())
         {
-            Debug.Log("all done!");
+            //Debug.Log("all done!");
         }
         else if(Input.GetMouseButtonDown(0))
         {
-            Debug.Log("not done yet :()");
+            //Debug.Log("not done yet :()");
         }
         pickups = GameObject.FindGameObjectsWithTag("pickup");
         foreach (GameObject pickup in pickups)
@@ -108,7 +123,7 @@ public class Example : MonoBehaviour
                 &&Vector3.Angle(pickup.transform.position - transform.position, transform.forward)<50)
                 {
                     pickedup[Array.IndexOf(reqitems,pickup.name)] = true;
-                    Debug.Log(reqitems[Array.IndexOf(reqitems,pickup.name)]+" picked up");
+                    //Debug.Log(reqitems[Array.IndexOf(reqitems,pickup.name)]+" picked up");
                     Destroy(pickup);
                 }
             }
