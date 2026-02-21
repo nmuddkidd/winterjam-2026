@@ -18,6 +18,11 @@ public class movereflect : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        transform.rotation = mirroredobj.transform.rotation;
+        Vector3 angles = new Vector3(0,mirroredobj.transform.rotation.eulerAngles.y,0);
+        angles.y += 180;
+
+        transform.eulerAngles=angles;
         //chooses which reflection it is
         switch (axis)
         {
@@ -37,6 +42,7 @@ public class movereflect : MonoBehaviour
         Vector3 newpos = initialpos + changeparent;
         newpos.x -= 2*changeparent.x;
         transform.position = newpos;
+
     }
 
     void reflectZ()
