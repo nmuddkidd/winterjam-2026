@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class movereflect : MonoBehaviour
 {
+    public GameObject mirroredobj;
     public char axis = 'z';
     private Vector3 initialpos;
     private Vector3 parentinitialpos;
@@ -11,7 +12,7 @@ public class movereflect : MonoBehaviour
     {
         //saves the initial position of the model and the player
         initialpos = transform.position;
-        parentinitialpos = transform.parent.position;
+        parentinitialpos = mirroredobj.transform.position;
     }
 
     // Update is called once per frame
@@ -32,7 +33,7 @@ public class movereflect : MonoBehaviour
     void reflectX()
     {
         //updates the position by adding the initial position and the parents change, inverting the reflection axis
-        Vector3 changeparent = transform.parent.position - parentinitialpos;
+        Vector3 changeparent = mirroredobj.transform.position - parentinitialpos;
         Vector3 newpos = initialpos + changeparent;
         newpos.x -= 2*changeparent.x;
         transform.position = newpos;
@@ -41,7 +42,7 @@ public class movereflect : MonoBehaviour
     void reflectZ()
     {
         //updates the position by adding the initial position and the parents change, inverting the reflection axis
-        Vector3 changeparent = transform.parent.position - parentinitialpos;
+        Vector3 changeparent = mirroredobj.transform.position - parentinitialpos;
         Vector3 newpos = initialpos + changeparent;
         newpos.z -= 2*changeparent.z;
         transform.position = newpos;
