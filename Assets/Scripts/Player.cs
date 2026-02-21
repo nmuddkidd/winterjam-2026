@@ -26,9 +26,11 @@ public class Example : MonoBehaviour
     private float pitch;
 
     private Vector3 playerVelocity;
+    private GameObject maincamera;
     private bool groundedPlayer;
     private GameObject[] pickups;
     private bool[] pickedup = new bool[3];
+    public bool animate = true;
     private void OnEnable()
     {
         moveAction.action.Enable();
@@ -45,8 +47,11 @@ public class Example : MonoBehaviour
     {
         //animcontroller = GameObject.FindGameObjectWithTag("playermodel").GetComponent<Animator>();
         GameObject[] models = GameObject.FindGameObjectsWithTag("playermodel");
-        animcontrollers[0] = models[0].GetComponent<Animator>();
-        animcontrollers[1] = models[1].GetComponent<Animator>();
+        if(animate){
+            animcontrollers[0] = models[0].GetComponent<Animator>();
+            animcontrollers[1] = models[1].GetComponent<Animator>();
+        }
+        maincamera = GameObject.FindGameObjectWithTag("MainCamera");
     }
 
     void Update()
@@ -69,10 +74,11 @@ public class Example : MonoBehaviour
         //rotation of playerbody
         pitch += Input.GetAxis("Mouse Y") * Ysens * -1;
         yaw += Input.GetAxis("Mouse X") * Xsens;
-        transform.rotation = Quaternion.Euler(pitch,yaw,0);
+        maincamera.transform.rotation = Quaternion.Euler(pitch,yaw,0);
+        transform.rotation = Quaternion.Euler(0,yaw,0);
         //(might want to make this only rotate the camera/ part of player the whole player model rotates as is)
 
-        float xrotation = transform.eulerAngles.y * Mathf.PI/180;
+        float xrotation = maincamera.transform.eulerAngles.y * Mathf.PI/180;
 
         // Jump using WasPressedThisFrame()
         if (groundedPlayer && jumpAction.action.WasPressedThisFrame())
@@ -100,8 +106,10 @@ public class Example : MonoBehaviour
         //animcontroller.SetFloat("speed",Mathf.Sqrt(finalMove.x*finalMove.x+finalMove.z*finalMove.z));
         
         //Debug.Log(finalMove.magnitude);
-        animcontrollers[0].SetFloat("speed",Mathf.Sqrt(finalMove.x*finalMove.x+finalMove.z*finalMove.z));
-        animcontrollers[1].SetFloat("speed",Mathf.Sqrt(finalMove.x*finalMove.x+finalMove.z*finalMove.z));
+        if(animate){
+            animcontrollers[0].SetFloat("speed",Mathf.Sqrt(finalMove.x*finalMove.x+finalMove.z*finalMove.z));
+            animcontrollers[1].SetFloat("speed",Mathf.Sqrt(finalMove.x*finalMove.x+finalMove.z*finalMove.z));
+        }
     }
 
     void clickinteraction()
