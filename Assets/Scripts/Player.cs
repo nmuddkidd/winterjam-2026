@@ -8,6 +8,8 @@ public class Example : MonoBehaviour
     public float playerSpeed = 5.0f;
     public float jumpHeight = 1.5f;
     public float gravityValue = -9.81f;
+    private Vector3 playerVelocity;
+    private bool groundedPlayer;
 
     [Header("Camera Control")]
     public float Xsens = 10f;
@@ -18,19 +20,25 @@ public class Example : MonoBehaviour
     public InputActionReference jumpAction;
     public CharacterController controller;
     private Animator[] animcontrollers = new Animator[2];
+    public bool animate = true;
 
     [Header("Input Actions")]
 
     public String[] reqitems = {"block1","block2","block3"};
+    private GameObject[] pickups;
+    private bool[] pickedup = new bool[3];
     private float yaw;
     private float pitch;
 
-    private Vector3 playerVelocity;
     private GameObject maincamera;
-    private bool groundedPlayer;
-    private GameObject[] pickups;
-    private bool[] pickedup = new bool[3];
-    public bool animate = true;
+
+    [Header("Music")]
+    public AudioSource audioSource;
+    public AudioClip[] snowfootsteps = new AudioClip[3];
+    public AudioClip[] footsteps = new AudioClip[3];
+    public int steptimer = 20;
+    private float timer;
+
     private void OnEnable()
     {
         moveAction.action.Enable();
@@ -58,6 +66,11 @@ public class Example : MonoBehaviour
     {
         movement();
         clickinteraction();
+        timer += Time.deltaTime;
+        if(timer > 100000)
+        {
+            timer=0;
+        }
     }
 
     void movement()
@@ -103,7 +116,12 @@ public class Example : MonoBehaviour
         }
         //submits adjusted final move command to movement controller
         controller.Move(finalMove * Time.deltaTime);
-        //animcontroller.SetFloat("speed",Mathf.Sqrt(finalMove.x*finalMove.x+finalMove.z*finalMove.z));
+
+        if (Mathf.Sqrt(finalMove.x * finalMove.x + finalMove.z * finalMove.z) > 0 && (int)(timer*5)%steptimer==0){
+            audioSource.clip = footsteps[UnityEngine.Random.Range(0,2)];
+            audioSource.Play();
+            Debug.Log("footstep");
+        }
         
         //Debug.Log(finalMove.magnitude);
         if(animate){
@@ -133,6 +151,7 @@ public class Example : MonoBehaviour
                     pickedup[Array.IndexOf(reqitems,pickup.name)] = true;
                     //Debug.Log(reqitems[Array.IndexOf(reqitems,pickup.name)]+" picked up");
                     Destroy(pickup);
+                    audioSource.Play();
                 }
             }
         }
